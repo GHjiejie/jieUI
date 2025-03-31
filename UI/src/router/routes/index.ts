@@ -9,7 +9,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: "/button",
         name: "button",
-        component: () => import("@/components/JButton/demo.vue"),
+        component: () => import("@/components/JButton/src/demo.vue"),
       },
     ],
   },
