@@ -17,6 +17,14 @@ export const buttonProps = {
   },
 
   /**
+   * @description 按钮颜色
+   */
+  color: {
+    type: String,
+    default: "#409eff",
+  },
+
+  /**
    * @description 按钮类型
    */
   type: {

@@ -1,37 +1,31 @@
 <template>
-  <button
-    :class="[
-      `size-${props.size}`,
-      `type-${props.type}`,
-      { 'is-disabled': props.disabled, 'is-round': props.round },
-    ]"
-    @click="handleClick"
-  >
+  <component :style="buttonStyle" @click="handleClick">
     <slot></slot>
-  </button>
+  </component>
 </template>
 
 <script setup lang="ts">
-import { buttonProps, buttonEmits } from "./index";
+import { buttonProps, buttonEmits } from "./button";
+import { useNamespace } from "@/hooks/use-namespace";
+import { useButtonCustomStyle } from "./button-custom";
 
-// const props = withDefaults(defineProps<Partial<buttonProps>>(), {
-//   type: "primary",
-//   disabled: false,
-//   size: "medium",
-//   round: true,
-// });
-
-// const props = defineProps<Partial<buttonProps>>();
 const props = defineProps(buttonProps);
 const emits = defineEmits(buttonEmits);
 
-const handleClick = (evt: MouseEvent) => {
-  if (props.disabled) {
-    evt.preventDefault();
-    return;
-  }
-  emits("click", evt);
-};
+// 动态绑定样式
+const buttonStyle = useButtonCustomStyle(props);
+console.log("buttonStyle", buttonStyle);
+
+// const ns = useNamespace("button");
+
+// 下面的这段逻辑我们要放在组件的外部，我们会自定义一个钩子函数
+// const handleClick = (evt: MouseEvent) => {
+//   if (props.disabled) {
+//     evt.preventDefault();
+//     return;
+//   }
+//   emits("click", evt);
+// };
 </script>
 
 <style lang="scss" scoped>
