@@ -1,8 +1,64 @@
-@use './config.scss' as *;
+@use "./config.scss" as *;
+@use "./functions.scss" as *;
 // 定义变量
 $B: null;
 $E: null;
 
-@mixin b($block){
-$B:$namespace+$common-separator+$block;
+// css变量的命名遵循的规矩是BEM命名法则， block__element--modifier
+// 1. block: 组件名称，通常是一个单词，表示组件的基本功能或作用
+// 2. element: 组件的子元素，通常是一个单词，表示组件的某个部分或功能
+// 3. modifier: 组件的变体或状态，通常是一个单词，表示组件的不同样式或状态
+@mixin b($block) {
+  $B: $namespace + $common-separator + $block;
+  @debug $B;
+  .#{$B} {
+    @content;
+  }
+}
+
+@mixin e($element) {
+  $E: $element !global;
+  $selector: &;
+  $currentSelector: "";
+  @each $unit in $element {
+    $currentSelector: #{$currentSelector +
+      "." +
+      $B +
+      $element-separator +
+      $unit +
+      ","};
+  }
+  @if hitAllSpecialNestRule($selector) {
+    @at-root {
+      #{$selector} {
+        #{$currentSelector} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @at-root {
+      #{$currentSelector} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin m($modifier) {
+  $selector: &;
+  $currentSelector: "";
+  @each $unit in $modifier {
+    $currentSelector: #{$currentSelector +
+      $selector +
+      $modifier-separator +
+      $unit +
+      ","};
+  }
+
+  @at-root {
+    #{$currentSelector} {
+      @content;
+    }
+  }
 }
