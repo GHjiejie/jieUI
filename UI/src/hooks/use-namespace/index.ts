@@ -2,7 +2,7 @@ import { computed, getCurrentInstance, inject, ref, unref } from "vue";
 
 import type { InjectionKey, Ref } from "vue";
 
-export const defaultNamespace = "JUI";
+export const defaultNamespace = "j";
 const statePrefix = "is-";
 
 const _bem = (

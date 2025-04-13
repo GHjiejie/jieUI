@@ -1,5 +1,5 @@
 <template>
-  <component :style="buttonStyle" @click="handleClick">
+  <component :style="buttonStyle" :class="buttonKls" @click="handleClick">
     <slot></slot>
   </component>
 </template>
@@ -8,24 +8,42 @@
 import { buttonProps, buttonEmits } from "./button";
 import { useNamespace } from "@/hooks/use-namespace";
 import { useButtonCustomStyle } from "./button-custom";
+import { useButton } from "./use-button";
+import { computed } from "vue";
 
 const props = defineProps(buttonProps);
-const emits = defineEmits(buttonEmits);
+const emit = defineEmits(buttonEmits);
 
-// 动态绑定样式
+// 动态绑定样式（这个是用户自定义的按钮颜色）
 const buttonStyle = useButtonCustomStyle(props);
 console.log("buttonStyle", buttonStyle);
 
-// const ns = useNamespace("button");
+const ns = useNamespace("button");
+const { _type, _size, _ref, _tag, _props, _disabled, handleClick } = useButton(
+  props,
+  emit
+);
 
-// 下面的这段逻辑我们要放在组件的外部，我们会自定义一个钩子函数
-// const handleClick = (evt: MouseEvent) => {
-//   if (props.disabled) {
-//     evt.preventDefault();
-//     return;
-//   }
-//   emits("click", evt);
-// };
+const buttonKls = computed(() => [
+  ns.b(),
+  ns.m(_type.value),
+  ns.m(_size.value),
+  ns.is("disabled", _disabled.value),
+  ns.is("round", props.round),
+]);
+
+console.log(_type, _size, _ref, _tag, _props, _disabled);
+
+defineExpose({
+  /** @description button html element */
+  ref: _ref,
+  /** @description button size */
+  size: _size,
+  /** @description button type */
+  type: _type,
+  /** @description button disabled */
+  disabled: _disabled,
+});
 </script>
 
 <style lang="scss" scoped>

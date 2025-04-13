@@ -19,11 +19,7 @@ export const buttonProps = {
   /**
    * @description 按钮颜色
    */
-  color: {
-    type: String,
-    default: "#409eff",
-  },
-
+  color: String,
   /**
    * @description 按钮类型
    */
@@ -47,6 +43,10 @@ export const buttonProps = {
   round: {
     type: Boolean,
     default: true,
+  },
+  tag: {
+    type: String,
+    default: "button",
   },
 } as const;
 

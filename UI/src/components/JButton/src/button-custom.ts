@@ -19,6 +19,7 @@ export function useButtonCustomStyle(props: ButtonProps) {
         "border-color": buttonColor,
       });
     }
+    console.log("styles", styles);
 
     return styles;
   });
