@@ -1,16 +1,66 @@
-@use "./config.scss" as *;
-@use "./functions.scss" as *;
-// 定义变量
+@use "function" as *;
+@use "../common/var" as *;
+// forward mixins
+@forward "config";
+@forward "function";
+@forward "_var";
+@use "config" as *;
+@use "sass:string";
+@use "sass:map";
+
 $B: null;
 $E: null;
 
-// css变量的命名遵循的规矩是BEM命名法则， block__element--modifier
-// 1. block: 组件名称，通常是一个单词，表示组件的基本功能或作用
-// 2. element: 组件的子元素，通常是一个单词，表示组件的某个部分或功能
-// 3. modifier: 组件的变体或状态，通常是一个单词，表示组件的不同样式或状态
+// Break-points
+@mixin res($key, $map: $breakpoints) {
+  // loop breakpoint Map, return if present
+  @if map.has-key($map, $key) {
+    @media only screen and #{string.unquote(map.get($map, $key))} {
+      @content;
+    }
+  } @else {
+    @warn "Undefined points: `#{$map}`";
+  }
+}
+
+// Scrollbar
+@mixin scroll-bar {
+  $scrollbar-thumb-background: getCssVar("text-color", "disabled");
+  $scrollbar-track-background: getCssVar("fill-color", "blank");
+
+  &::-webkit-scrollbar {
+    z-index: 11;
+    width: 6px;
+
+    &:horizontal {
+      height: 6px;
+    }
+
+    &-thumb {
+      border-radius: 5px;
+      width: 6px;
+      background: $scrollbar-thumb-background;
+    }
+
+    &-corner {
+      background: $scrollbar-track-background;
+    }
+
+    &-track {
+      background: $scrollbar-track-background;
+
+      &-piece {
+        background: $scrollbar-track-background;
+        width: 6px;
+      }
+    }
+  }
+}
+
+// BEM
 @mixin b($block) {
-  $B: $namespace + $common-separator + $block;
-  @debug $B;
+  $B: $namespace + $common-separator + $block !global;
+
   .#{$B} {
     @content;
   }
@@ -28,6 +78,7 @@ $E: null;
       $unit +
       ","};
   }
+
   @if hitAllSpecialNestRule($selector) {
     @at-root {
       #{$selector} {
@@ -60,5 +111,130 @@ $E: null;
     #{$currentSelector} {
       @content;
     }
+  }
+}
+
+@mixin configurable-m($modifier, $E-flag: false) {
+  $selector: &;
+  $interpolation: "";
+
+  @if $E-flag {
+    $interpolation: $element-separator + $E-flag;
+  }
+
+  @at-root {
+    #{$selector} {
+      .#{$B + $interpolation + $modifier-separator + $modifier} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin spec-selector(
+  $specSelector: "",
+  $element: $E,
+  $modifier: false,
+  $block: $B
+) {
+  $modifierCombo: "";
+
+  @if $modifier {
+    $modifierCombo: $modifier-separator + $modifier;
+  }
+
+  @at-root {
+    #{&}#{$specSelector}.#{$block
+      + $element-separator
+      + $element
+      + $modifierCombo} {
+      @content;
+    }
+  }
+}
+
+@mixin meb($modifier: false, $element: $E, $block: $B) {
+  $selector: &;
+  $modifierCombo: "";
+
+  @if $modifier {
+    $modifierCombo: $modifier-separator + $modifier;
+  }
+
+  @at-root {
+    #{$selector} {
+      .#{$block + $element-separator + $element + $modifierCombo} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+@mixin extend-rule($name) {
+  @extend #{"%shared-" + $name} !optional;
+}
+
+@mixin share-rule($name) {
+  $rule-name: "%shared-" + $name;
+
+  @at-root #{$rule-name} {
+    @content;
+  }
+}
+
+@mixin pseudo($pseudo) {
+  @at-root #{&}#{":#{$pseudo}"} {
+    @content;
+  }
+}
+
+@mixin picker-popper($background, $border, $box-shadow) {
+  &.#{$namespace}-popper {
+    background: $background;
+    border: $border;
+    box-shadow: $box-shadow;
+
+    .#{$namespace}-popper__arrow {
+      &::before {
+        border: $border;
+      }
+    }
+
+    @each $placement,
+      $adjacency
+        in ("top": "left", "bottom": "right", "left": "bottom", "right": "top")
+    {
+      &[data-popper-placement^="#{$placement}"] {
+        .#{$namespace}-popper__arrow::before {
+          border-#{$placement}-color: transparent;
+          border-#{$adjacency}-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+// dark
+@mixin dark($block) {
+  html.dark {
+    @include b($block) {
+      @content;
+    }
+  }
+}
+
+@mixin inset-input-border($color, $important: false) {
+  @if $important == true {
+    box-shadow: 0 0 0 1px $color inset !important;
+  } @else {
+    box-shadow: 0 0 0 1px $color inset;
   }
 }
