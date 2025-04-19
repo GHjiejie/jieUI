@@ -4,6 +4,7 @@ import type { InjectionKey, Ref } from "vue";
 
 export const defaultNamespace = "j";
 const statePrefix = "is-";
+// 我们css的命名规则是遵循bem规则的，具体block(块) element(元素) modifier(修饰符)
 
 const _bem = (
   namespace: string,
