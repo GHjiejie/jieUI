@@ -1,0 +1,7 @@
+// 这个文件下面我们要设置一些根元素的样式
+// 如果不使用UI框架的话，那么我们的根元素是不需要携带前缀的，但是现在的情况是，我们有自定义的命名空间，所以，最后封装一个函数来处理
+
+@use "./mixins/mixins.scss" as *;
+:root {
+  @include set-css-var-value("color-white" ，$color-white);
+}

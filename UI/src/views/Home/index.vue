@@ -1,29 +1,40 @@
 <template>
   <div class="home">
     <div class="menu">
-      <el-menu
-        default-active="2"
-        @open="handleOpen"
-        @close="handleClose"
-        router="true"
-      >
-        <el-menu-item index="/button">
-          <el-icon><icon-menu /></el-icon>
+      <ul class="custom-menu">
+        <li
+          class="custom-menu-item"
+          @click="navigateTo('/button')"
+          :class="{ active: activeRoute === '/button' }"
+        >
+          <span class="menu-icon">☰</span>
           <span>Button</span>
-        </el-menu-item>
-        <el-menu-item index="/button">
-          <el-icon><icon-menu /></el-icon>
-          <span>Button</span>
-        </el-menu-item>
-        <el-menu-item index="/button">
-          <el-icon><icon-menu /></el-icon>
-          <span>Button</span>
-        </el-menu-item>
-        <el-menu-item index="/button">
-          <el-icon><icon-menu /></el-icon>
-          <span>Button</span>
-        </el-menu-item>
-      </el-menu>
+        </li>
+        <li
+          class="custom-menu-item"
+          @click="navigateTo('/another')"
+          :class="{ active: activeRoute === '/another' }"
+        >
+          <span class="menu-icon">☰</span>
+          <span>Another</span>
+        </li>
+        <li
+          class="custom-menu-item"
+          @click="navigateTo('/third')"
+          :class="{ active: activeRoute === '/third' }"
+        >
+          <span class="menu-icon">☰</span>
+          <span>Third</span>
+        </li>
+        <li
+          class="custom-menu-item"
+          @click="navigateTo('/fourth')"
+          :class="{ active: activeRoute === '/fourth' }"
+        >
+          <span class="menu-icon">☰</span>
+          <span>Fourth</span>
+        </li>
+      </ul>
     </div>
     <div class="main">
       <RouterView></RouterView>
@@ -31,12 +42,23 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-const handleOpen = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
-};
-const handleClose = (key: string, keyPath: string[]) => {
-  console.log(key, keyPath);
+<script>
+export default {
+  data() {
+    return {
+      activeRoute: this.$route.path, // 初始化为当前路由
+    };
+  },
+  watch: {
+    $route(newRoute) {
+      this.activeRoute = newRoute.path; // 监听路由变化
+    },
+  },
+  methods: {
+    navigateTo(route) {
+      this.$router.push(route);
+    },
+  },
 };
 </script>
 
@@ -58,11 +80,25 @@ const handleClose = (key: string, keyPath: string[]) => {
   background-color: #ffffff; /* 主内容背景颜色 */
 }
 
-.el-menu {
-  border: none; /* 去掉菜单边框 */
+.custom-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.el-menu-item {
-  margin-bottom: 10px; /* 菜单项之间的间距 */
+.custom-menu-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-menu-item:hover,
+.custom-menu-item.active {
+  background-color: #ddd;
+}
+
+.menu-icon {
+  margin-right: 8px;
 }
 </style>
