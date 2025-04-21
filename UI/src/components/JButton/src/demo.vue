@@ -15,3 +15,7 @@ const handleClick = (evt: MouseEvent) => {
   console.log("click", evt);
 };
 </script>
+
+<style scoped lang="scss">
+@import "../../JStyle/src/button.scss";
+</style>
