@@ -1,1 +1,44 @@
+@use "sass:map";
+@use "./mixins/mixins.scss" as *;
+@use "./mixins/var" as *;
+@use "./common/var.scss" as *;
+@use "./mixins/function.scss" as *;
 
+// 设置变量
+$button-icon-span-gap: () !default;
+$button-icon-span-gap: map.merge(
+  (
+    "default": 8px,
+    "small": 4px,
+    "large": 12px,
+  ),
+  $button-icon-span-gap
+);
+
+@include b(button) {
+  @include set-component-css-var("button", $button);
+}
+
+@include b(button) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  line-height: 1;
+  // min-height will expand when in flex
+  // height: map.get($input-height, "default");
+  white-space: nowrap;
+  cursor: pointer;
+  color: getCssVar("button", "text-color");
+  text-align: center;
+  box-sizing: border-box;
+  outline: none;
+  transition: 0.1s;
+  font-weight: getCssVar("button", "font-weight");
+  user-select: none;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  background-color: getCssVar("button", "bg-color");
+  border: getCssVar("border");
+  border-color: getCssVar("button", "border-color");
+}

@@ -8,13 +8,15 @@
 $types: primary, success, warning, danger, error, info;
 
 // Color
-$colors: () !default;
+$colors: (
+
+) !default; //后面的default意思就是如果导入此文件的文件中已经存在 $colors map，则使用现有的 map；否则，将创建此空 map
 $colors: map.deep-merge(
   (
     "white": #ffffff,
     "black": #000000,
     "primary": (
-      "base": #409eff,
+      "base": #dc26f0,
     ),
     "success": (
       "base": #67c23a,
@@ -43,3 +45,28 @@ $color-warning: map.get($colors, "warning", "base") !default;
 $color-danger: map.get($colors, "danger", "base") !default;
 $color-error: map.get($colors, "error", "base") !default;
 $color-info: map.get($colors, "info", "base") !default;
+
+$button: () !default;
+
+// 下面设置按钮的基本样式，就是只要使用了我们的按钮组件，就一定会有下面的默认样式
+$button: map.merge(
+  (
+    "font-weight": getCssVar("font-weight-primary"),
+    "border-color": getCssVar("border-color"),
+    "bg-color": getCssVar("fill-color", "blank"),
+    "text-color": getCssVar("text-color", "regular"),
+    "disabled-text-color": getCssVar("disabled-text-color"),
+    "disabled-bg-color": getCssVar("fill-color", "blank"),
+    "disabled-border-color": getCssVar("border-color-light"),
+    "hover-text-color": getCssVar("color-primary"),
+    "hover-bg-color": getCssVar("color-primary", "light-9"),
+    "hover-border-color": getCssVar("color-primary-light-7"),
+    "active-text-color": getCssVar("button-hover-text-color"),
+    "active-border-color": getCssVar("color-primary"),
+    "active-bg-color": getCssVar("button", "hover-bg-color"),
+    "outline-color": getCssVar("color-primary", "light-5"),
+    "hover-link-text-color": getCssVar("text-color", "secondary"),
+    "active-color": getCssVar("text-color", "primary"),
+  ),
+  $button
+);
