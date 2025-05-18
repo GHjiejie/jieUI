@@ -42,24 +42,25 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      activeRoute: this.$route.path, // 初始化为当前路由
-    };
-  },
-  watch: {
-    $route(newRoute) {
-      this.activeRoute = newRoute.path; // 监听路由变化
-    },
-  },
-  methods: {
-    navigateTo(route) {
-      this.$router.push(route);
-    },
-  },
+<script lang="ts" setup>
+import { ref, watch } from "vue";
+import { useRouter, useRoute } from "vue-router";
+
+const router = useRouter();
+const route = useRoute();
+
+const activeRoute = ref(route.path);
+
+const navigateTo = (route: string) => {
+  router.push(route);
 };
+
+watch(
+  () => route.path,
+  (newPath) => {
+    activeRoute.value = newPath;
+  }
+);
 </script>
 
 <style scoped>
