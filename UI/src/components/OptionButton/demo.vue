@@ -31,7 +31,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import HoverActionContainer from "./components/OptionButton/index.vue";
+import HoverActionContainer from "./index.vue";
 
 const textContent = ref("这是默认的文本内容");
 
